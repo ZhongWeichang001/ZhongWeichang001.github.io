@@ -274,7 +274,7 @@ params:
         shortname: 
       utterances:
         enable: true
-        repo: ChenYi015/chenyi015.github.io
+        repo: ZhongWeichang001/ZhongWeichang001.github.io
         issueTerm: pathname
         label: comment
         lightTheme: github-light
