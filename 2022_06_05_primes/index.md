@@ -1,0 +1,141 @@
+# 素数
+
+
+# 素性测试
+
+**素数**：若整数 $n ( n > 1)$ 只有 $1$ 和 $n$ 两个因数，则 $n$ 为素数。
+
+## 试除法
+
+判断一个数 $n$ 是否为素数，最直接的办法是按照定义判断，依次看 $2,3,\cdots,n-1$ 能否整除 $n$，若能整除则 $n$ 为合数，都不能整除则 $n$ 为素数，算法时间复杂度为 $O(n)$。
+
+```cpp
+// 素性测试
+bool isPrime(int n) {
+    if (n < 2) {
+        return false;
+    } else {
+        for(int i = 2; i < n - 1; i++) {
+            if (n % i == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+```
+
+若 $n$ 为合数，则 $\exists s \geq t \in N_{+} 且 s \geq t > 1$ 使得 $n = st$，
+于是有 $t \leq \sqrt{n}$，也就是说合数 $n$ 一定存在一个因数小于等于 $\sqrt{n}$。
+因此我们只需要对 $2,3,\cdots,\sqrt{n}$ 判断是否能整除 $n$ 即可。因此上述算法时间复杂度可降为 $O(\sqrt{n})$.
+
+```cpp
+// 素性测试
+bool isPrime(int n) {
+    if (n < 2) {
+        return false;
+    } else {
+        for (int i = 2; i * i <= n; i++) {
+            if (n % i == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+```
+
+# 打印素数表
+
+## Eratosthenes 筛法
+
+算法思想是用已知素数的倍数去过滤掉那些合数，算法复杂度为 $O(n \log{\log n})$.
+
+```cpp
+#include <vector>
+
+using namespace std;
+
+// Eratosthenes 筛法返回小于等于 n 的素数表
+vector<int> eratosthenes(int n) {
+	vector<int> primes;
+    if (n < 2) {
+        return primes;
+    }
+    vector<int> check(n + 1);
+    for (int i = 2; i <= n; i++) {
+        if (!check[i]) {
+            primes.push_back(i);
+            for (int j = 2 * i; j <= n; j += i) {
+                check[j] = true;
+            }
+        }
+    }
+    return primes;
+}
+
+```
+
+## Euler 筛法
+
+Euler 筛法也称线性筛法，时间复杂度为 $O(n)$.
+
+```cpp
+#include <vector>
+
+using namespace std;
+
+// Euler 筛法
+vector<int> euler(int n) {
+    vector<int> primes;
+    if (n < 2) {
+        return primes;
+    }
+    vector<int> check(n + 1);
+    for (int i = 2; i <= n; i++) {
+        if (!check[i]) {
+            primes.push_back(i);
+        }
+        for (int j = 0; j < primes.size() && i * primes[j] <= n; j++) {
+            check[i * primes[j]] = true;
+            if (i % primes[j] == 0) {
+                break;
+            }
+        }
+    }
+    return primes;
+}
+
+```
+
+# 素因子分解
+
+```cpp
+#include <vector>
+
+using namespace std;
+
+// 素因子分解: 试除法
+vector<pair<int, int>> getPrimeFactorization(int n) {
+    // factorization[i][0] 和 factorization[i][1] 表示第 i 个素因子及其指数
+    // 素因子从小到达排序
+    vector<pair<int, int>> factorization;
+    for (int i = 2; i * i <= n; ++i) {
+        if (n % i == 0) {
+            int index = 0;
+            while (n % i == 0) {
+                n /= i;
+                ++index;
+            }
+            factorization.emplace_back(i, index);
+        }
+    }
+    if (n != 1) {
+        factorization.emplace_back(n, 1);
+    }
+    return factorization;
+}
+
+```
