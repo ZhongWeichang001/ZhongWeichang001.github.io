@@ -1,5 +1,5 @@
 baseURL: https://ZhongWeichang001.github.io
-theme: hugo-theme-LoveIt
+theme: LoveIt
 languageCode: en
 languageName: English
 hasCJKLanguage: true
